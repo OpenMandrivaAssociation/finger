@@ -12,6 +12,7 @@ Patch1:		bsd-finger-0.10-exact.patch
 Patch2:		bsd-finger-0.16-allocbroken.patch
 Patch3:		bsd-finger-0.17-rfc742.patch
 Patch4:		bsd-finger-0.17-glibc-2.2.2.patch
+BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
 Finger is a utility which allows users to see information about system users
