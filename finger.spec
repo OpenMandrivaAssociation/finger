@@ -1,7 +1,7 @@
 Summary:	The finger client
 Name:		finger
 Version:	0.17
-Release:	%mkrel 8
+Release:	%mkrel 9
 License:	BSD
 Group:		Networking/Other
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/finger
