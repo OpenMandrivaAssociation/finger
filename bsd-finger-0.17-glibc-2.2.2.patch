@@ -1,0 +1,20 @@
+--- bsd-finger-0.17/finger/lprint.c.chmou	Tue Sep 14 12:51:11 1999
++++ bsd-finger-0.17/finger/lprint.c	Wed Mar 14 11:07:34 2001
+@@ -49,6 +49,7 @@
+ #include <sys/file.h>
+ #include <sys/stat.h>
+ #include <sys/time.h>
++#include <time.h>
+ #include "finger.h"
+ 
+ static void lprint(PERSON *pn);
+--- bsd-finger-0.17/finger/sprint.c.chmou	Sun Dec 12 19:59:33 1999
++++ bsd-finger-0.17/finger/sprint.c	Wed Mar 14 11:07:49 2001
+@@ -41,6 +41,7 @@
+ 
+ #include <sys/types.h>
+ #include <sys/time.h>
++#include <time.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
