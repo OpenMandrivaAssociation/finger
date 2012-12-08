@@ -1,7 +1,7 @@
 Summary:	The finger client
 Name:		finger
 Version:	0.17
-Release:	%mkrel 14
+Release:	%mkrel 16
 License:	BSD
 Group:		Networking/Other
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/finger
@@ -88,4 +88,50 @@ rm -rf %{buildroot}
 %{_mandir}/man8/in.fingerd.8*
 %{_mandir}/man8/fingerd.8*
 
+
+
+
+%changelog
+* Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 0.17-14mdv2011.0
++ Revision: 664308
+- mass rebuild
+
+* Thu Dec 02 2010 Oden Eriksson <oeriksson@mandriva.com> 0.17-13mdv2011.0
++ Revision: 605143
+- rebuild
+
+* Mon Mar 15 2010 Oden Eriksson <oeriksson@mandriva.com> 0.17-12mdv2010.1
++ Revision: 520108
+- rebuilt for 2010.1
+
+* Wed Sep 02 2009 Christophe Fergeau <cfergeau@mandriva.com> 0.17-11mdv2010.0
++ Revision: 424442
+- rebuild
+
+* Tue Jun 17 2008 Thierry Vignaud <tv@mandriva.org> 0.17-10mdv2009.0
++ Revision: 220825
+- rebuild
+
+* Sat Jan 12 2008 Thierry Vignaud <tv@mandriva.org> 0.17-9mdv2008.1
++ Revision: 149726
+- rebuild
+- kill re-definition of %%buildroot on Pixel's request
+
+  + Olivier Blin <oblin@mandriva.com>
+    - restore BuildRoot
+
+
+* Sat Mar 17 2007 Oden Eriksson <oeriksson@mandriva.com> 0.17-8mdv2007.1
++ Revision: 145531
+- Import finger
+
+* Sat Mar 17 2007 Oden Eriksson <oeriksson@mandriva.com> 0.17-8mdv2007.1
+- use the %%mrel macro
+- bunzip patches
+
+* Mon May 15 2006 Stefan van der Eijk <stefan@eijk.nu> 0.17-7mdk
+- rebuild for sparc
+
+* Fri Oct 14 2005 Pixel <pixel@mandriva.com> 0.17-6mdk
+- rebuild
 
