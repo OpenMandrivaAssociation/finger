@@ -23,6 +23,9 @@ Patch12:	bsd-finger-0.17-host-info.patch
 Patch13:	bsd-finger-0.17-match_sigsegv.patch
 Patch14:	bsd-finger-0.17-man_page_systemd.patch
 
+# mandriva patches
+Patch100:	bsd-finger-0.17-autotoolish.patch
+
 %description
 Finger is a utility which allows users to see information about system users
 (login name, home directory, name, how long they've been logged in to the
@@ -52,20 +55,12 @@ you'd like finger information to be available.
 %apply_patches
 
 %build
-sh configure
-perl -pi -e '
-    s,^CC=.*$,CC=cc,;
-    s,-O2,\$(RPM_OPT_FLAGS),;
-    s,^BINDIR=.*$,BINDIR=%{_bindir},;
-    s,^MANDIR=.*$,MANDIR=%{_mandir},;
-    s,^SBINDIR=.*$,SBINDIR=%{_sbindir},;
-    ' MCONFIG
+%configure
 %make
 
 %install
 install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/xinetd.d/finger
-
-make INSTALLROOT=%{buildroot} install
+%makeinstall_std
 
 %post server
 /sbin/service xinetd reload > /dev/null 2>&1 || :
@@ -85,6 +80,7 @@ make INSTALLROOT=%{buildroot} install
 
 %changelog
 * Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-17
+- make compatible with autotools arguments & variables (P100)
 - cleanups
 - sync patches with fedora
 

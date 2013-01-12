@@ -1,0 +1,172 @@
+--- bsd-finger-0.17/configure.0100~	2013-01-12 12:37:57.968165856 +0100
++++ bsd-finger-0.17/configure	2013-01-12 12:37:58.058167106 +0100
+@@ -6,7 +6,7 @@
+ 
+ PREFIX='/usr'
+ #EXECPREFIX='$PREFIX'
+-INSTALLROOT=''
++DESTDIR=''
+ BINMODE='755'
+ #DAEMONMODE='$BINMODE'
+ MANMODE='644'
+@@ -36,7 +36,10 @@ EOF
+ 	--with-debug|--debug) DEBUG=1;;
+ 	--prefix=*) PREFIX=`echo $1 | sed 's/^[^=]*=//'` ;;
+ 	--exec-prefix=*) EXECPREFIX=`echo $1 | sed 's/^[^=]*=//'` ;;
+-	--installroot=*) INSTALLROOT=`echo $1 | sed 's/^[^=]*=//'` ;;
++	--bindir=*) BINDIR=`echo $1 | sed 's/^[^=]*=//'`;;
++	--sbindir=*) SBINDIR=`echo $1 | sed 's/^[^=]*=//'`;;
++	--mandir=*) MANDIR=`echo $1 | sed 's/^[^=]*=//'`;;
++	--installroot=*) DESTDIR=`echo $1 | sed 's/^[^=]*=//'` ;;
+ 	--binmode=*) BINMODE=`echo $1 | sed 's/^[^=]*=//'` ;;
+ 	--daemonmode=*) DAEMONMODE=`echo $1 | sed 's/^[^=]*=//'` ;;
+ 	--manmode=*) MANMODE=`echo $1 | sed 's/^[^=]*=//'` ;;
+@@ -46,7 +49,7 @@ EOF
+ 	--enable-ipv6=*) ENABLE_IPV6=`echo $1 | sed 's/^[^=]*=//'`;;
+ 	--enable-ipv6) ENABLE_IPV6=yes;;
+ 
+-	*) echo "Unrecognized option: $1"; exit 1;;
++	*) echo "Unrecognized option: $1";;
+ esac 
+ shift
+ done
+@@ -59,14 +62,14 @@ if [ x$DAEMONMODE = x ]; then
+ 	DAEMONMODE="$BINMODE"
+ fi
+ 
+-BINDIR="$EXECPREFIX/bin"
+-SBINDIR="$EXECPREFIX/sbin"
+-MANDIR="$PREFIX/man"
++[ -z "$BINDIR" ] && BINDIR="$EXECPREFIX/bin"
++[ -z "$SBINDIR" ] && SBINDIR="$EXECPREFIX/sbin"
++[ -z "$MANDIR" ] && MANDIR="$PREFIX/man"
+ 
+ echo "Directories: $BINDIR $SBINDIR $MANDIR "
+ 
+-if [ x$INSTALLROOT != x ]; then
+-    echo "Installing in chroot tree rooted at $INSTALLROOT"
++if [ x$DESTDIR != x ]; then
++    echo "Installing in chroot tree rooted at $DESTDIR"
+ fi
+ 
+ ##################################################
+@@ -125,7 +128,7 @@ if [ x$DEBUG = x ]; then
+          $CC -O2 __conftest.c -o __conftest
+        ) >/dev/null 2>&1; then
+          echo 'yes'
+-         CFLAGS="$CFLAGS -O2"
++         [ -z "$CFLAGS" ] && CFLAGS="-O2"
+     else
+          echo 'no'
+          echo -n "Checking if $CC accepts -O... "
+@@ -133,7 +136,7 @@ if [ x$DEBUG = x ]; then
+               $CC -O __conftest.c -o __conftest
+             ) >/dev/null 2>&1; then
+               echo 'yes'
+-              CFLAGS="$CFLAGS -O"
++              [ -z "$CFLAGS" ] && CFLAGS="-O"
+          else
+               echo 'no'
+          fi
+@@ -145,15 +148,15 @@ else
+          $CC -g __conftest.c -o __conftest
+        ) >/dev/null 2>&1; then
+          echo 'yes'
+-         CFLAGS="$CFLAGS -g"
++         [ -z "$CFLAGS" ] && CFLAGS="$CFLAGS -g"
+     else
+          echo 'no'
+     fi
+ 
+ fi
+ 
+-LDFLAGS=
+-LIBS=
++[ -z "$LDFLAGS" ] && LDFLAGS=
++[ -z "$LIBS" ] && LIBS=
+ 
+ rm -f __conftest*
+ 
+@@ -325,23 +328,22 @@ echo 'Generating MCONFIG...'
+     echo '#'
+     echo
+ 
+-    echo "BINDIR=$BINDIR"
+-    echo "SBINDIR=$SBINDIR"
+-    echo "MANDIR=$MANDIR"
+-    echo "BINMODE=$BINMODE"
+-    echo "DAEMONMODE=$DAEMONMODE"
+-    echo "MANMODE=$MANMODE"
+-    echo "PREFIX=$PREFIX"
+-    echo "EXECPREFIX=$EXECPREFIX"
+-    echo "INSTALLROOT=$INSTALLROOT"
+-    echo "CC=$CC"
++    echo "BINDIR?=$BINDIR"
++    echo "SBINDIR?=$SBINDIR"
++    echo "MANDIR?=$MANDIR"
++    echo "BINMODE?=$BINMODE"
++    echo "DAEMONMODE?=$DAEMONMODE"
++    echo "MANMODE?=$MANMODE"
++    echo "PREFIX?=$PREFIX"
++    echo "EXECPREFIX?=$EXECPREFIX"
++    echo "DESTDIR?=$DESTDIR"
++    echo "CC?=$CC"
++    echo "CFLAGS?=$CFLAGS" | sed 's/= */=/'
+     if [ x$CC_WARNINGS != x ]; then
+-        CFLAGS="$CFLAGS $WARNINGS"
++        echo "CFLAGS+= $WARNINGS"
+     fi
+-
+-    echo "CFLAGS=$CFLAGS" | sed 's/= */=/'
+-    echo "LDFLAGS=$LDFLAGS" | sed 's/= */=/'
+-    echo "LIBS=$LIBS" | sed 's/= */=/'
++    echo "LDFLAGS?=$LDFLAGS" | sed 's/= */=/'
++    echo "LIBS?=$LIBS" | sed 's/= */=/'
+ 
+ ) > MCONFIG
+ 
+--- bsd-finger-0.17/fingerd/Makefile.0100~	2013-01-12 12:37:57.982166050 +0100
++++ bsd-finger-0.17/fingerd/Makefile	2013-01-12 12:37:58.031166731 +0100
+@@ -9,11 +9,11 @@ fingerd: fingerd.o
+ fingerd.o: pathnames.h ../version.h
+ 
+ install: fingerd
+-	install -d $(INSTALLROOT)$(SBINDIR)
+-	install -m$(DAEMONMODE) fingerd $(INSTALLROOT)$(SBINDIR)/in.fingerd
+-	install -d $(INSTALLROOT)$(MANDIR)/man8
+-	install -m$(MANMODE) fingerd.8 $(INSTALLROOT)$(MANDIR)/man8/in.fingerd.8
+-	ln -sf in.fingerd.8 $(INSTALLROOT)$(MANDIR)/man8/fingerd.8
++	install -d $(DESTDIR)$(SBINDIR)
++	install -m$(DAEMONMODE) fingerd $(DESTDIR)$(SBINDIR)/in.fingerd
++	install -d $(DESTDIR)$(MANDIR)/man8
++	install -m$(MANMODE) fingerd.8 $(DESTDIR)$(MANDIR)/man8/in.fingerd.8
++	ln -sf in.fingerd.8 $(DESTDIR)$(MANDIR)/man8/fingerd.8
+ 
+ clean:
+ 	rm -f *.o fingerd
+--- bsd-finger-0.17/finger/Makefile.0100~	2013-01-12 12:37:57.982166050 +0100
++++ bsd-finger-0.17/finger/Makefile	2013-01-12 12:37:58.039166841 +0100
+@@ -10,10 +10,10 @@ finger.o lprint.o net.o sprint.o util.o
+ finger.o: ../version.h
+ 
+ install: finger
+-	install -d $(INSTALLROOT)$(BINDIR)
+-	install -m$(BINMODE) finger $(INSTALLROOT)$(BINDIR)
+-	install -d $(INSTALLROOT)$(MANDIR)/man1
+-	install -m$(MANMODE) finger.1 $(INSTALLROOT)$(MANDIR)/man1
++	install -d $(DESTDIR)$(BINDIR)
++	install -m$(BINMODE) finger $(DESTDIR)$(BINDIR)
++	install -d $(DESTDIR)$(MANDIR)/man1
++	install -m$(MANMODE) finger.1 $(DESTDIR)$(MANDIR)/man1
+ 
+ clean:
+ 	rm -f *.o finger
+--- bsd-finger-0.17/MCONFIG.in.0100~	1999-10-01 01:23:13.000000000 +0200
++++ bsd-finger-0.17/MCONFIG.in	2013-01-12 12:37:58.040166855 +0100
+@@ -1,5 +1,5 @@
+ # Dirs
+-INSTALLROOT
++DESTDIR
+ BINDIR
+ SBINDIR
+ MANDIR
