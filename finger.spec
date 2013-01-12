@@ -22,7 +22,6 @@ Patch11:	bsd-finger-0.17-init-realname.patch
 Patch12:	bsd-finger-0.17-host-info.patch
 Patch13:	bsd-finger-0.17-match_sigsegv.patch
 Patch14:	bsd-finger-0.17-man_page_systemd.patch
-BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
 Finger is a utility which allows users to see information about system users
@@ -35,8 +34,8 @@ other systems.
 %package	server
 Summary:	The finger daemon
 Group:		System/Servers
-Requires(post): xinetd
-Requires(postun): xinetd
+Requires(post):	xinetd
+Requires(postun):xinetd
 
 %description	server
 Finger is a utility which allows users to see information about system users
@@ -49,7 +48,6 @@ You should install finger-server if your system is used by multiple users and
 you'd like finger information to be available.
 
 %prep
-
 %setup -q -n bsd-finger-%{version}
 %apply_patches
 
@@ -65,11 +63,7 @@ perl -pi -e '
 %make
 
 %install
-rm -rf %{buildroot}
-
-mkdir -p %{buildroot}/{%{_bindir},%{_sbindir},%{_mandir}/man{1,8}}
-
-install -D -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/xinetd.d/finger
+install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/xinetd.d/finger
 
 make INSTALLROOT=%{buildroot} install
 
@@ -79,26 +73,19 @@ make INSTALLROOT=%{buildroot} install
 %postun server
 /sbin/service xinetd reload > /dev/null 2>&1 || :
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root)
 %{_bindir}/finger
 %{_mandir}/man1/finger.1*
 
 %files server
-%defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/xinetd.d/finger
 %{_sbindir}/in.fingerd
 %{_mandir}/man8/in.fingerd.8*
 %{_mandir}/man8/fingerd.8*
 
-
-
-
 %changelog
 * Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-17
+- cleanups
 - sync patches with fedora
 
 * Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 0.17-14mdv2011.0
