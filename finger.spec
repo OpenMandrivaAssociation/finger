@@ -1,7 +1,7 @@
 Summary:	The finger client
 Name:		finger
 Version:	0.17
-Release:	17
+Release:	18
 License:	BSD
 Group:		Networking/Other
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/finger
@@ -54,7 +54,7 @@ you'd like finger information to be available.
 %apply_patches
 
 %build
-%configure
+%configure	--enable-ipv6
 %make
 
 %install
@@ -75,6 +75,9 @@ install -m644 %{SOURCE2} -D %{buildroot}%{_unitdir}/finger@.service
 %{_mandir}/man8/fingerd.8*
 
 %changelog
+* Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-13
+- enable ipv6 support
+
 * Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-17
 - provide native systemd service file (rhbz#737178)
 - make compatible with autotools arguments & variables (P100)
