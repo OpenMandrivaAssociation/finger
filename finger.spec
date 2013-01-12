@@ -6,7 +6,8 @@ License:	BSD
 Group:		Networking/Other
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/finger
 Source0:	ftp://sunsite.unc.edu/pub/Linux/system/network/finger/bsd-finger-%{version}.tar.bz2
-Source1:	finger.xinetd
+Source1:	finger.socket
+Source2:	finger@.service
 # fedora patches
 Patch1:		bsd-finger-0.16-pts.patch
 Patch2:		bsd-finger-0.17-exact.patch
@@ -37,8 +38,6 @@ other systems.
 %package	server
 Summary:	The finger daemon
 Group:		System/Servers
-Requires(post):	xinetd
-Requires(postun):xinetd
 
 %description	server
 Finger is a utility which allows users to see information about system users
@@ -59,27 +58,25 @@ you'd like finger information to be available.
 %make
 
 %install
-install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/xinetd.d/finger
+install -m644 %{SOURCE1} -D %{buildroot}%{_unitdir}/finger.socket
+install -m644 %{SOURCE2} -D %{buildroot}%{_unitdir}/finger@.service
+
 %makeinstall_std
-
-%post server
-/sbin/service xinetd reload > /dev/null 2>&1 || :
-
-%postun server
-/sbin/service xinetd reload > /dev/null 2>&1 || :
 
 %files
 %{_bindir}/finger
 %{_mandir}/man1/finger.1*
 
 %files server
-%config(noreplace) %{_sysconfdir}/xinetd.d/finger
+%{_unitdir}/finger.socket
+%{_unitdir}/finger@.service
 %{_sbindir}/in.fingerd
 %{_mandir}/man8/in.fingerd.8*
 %{_mandir}/man8/fingerd.8*
 
 %changelog
 * Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-17
+- provide native systemd service file (rhbz#737178)
 - make compatible with autotools arguments & variables (P100)
 - cleanups
 - sync patches with fedora
