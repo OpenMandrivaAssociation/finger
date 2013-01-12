@@ -1,17 +1,27 @@
 Summary:	The finger client
 Name:		finger
 Version:	0.17
-Release:	%mkrel 16
+Release:	17
 License:	BSD
 Group:		Networking/Other
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/finger
 Source0:	ftp://sunsite.unc.edu/pub/Linux/system/network/finger/bsd-finger-%{version}.tar.bz2
 Source1:	finger.xinetd
-Patch0:		bsd-finger-0.16-pts.patch
-Patch1:		bsd-finger-0.10-exact.patch
-Patch2:		bsd-finger-0.16-allocbroken.patch
-Patch3:		bsd-finger-0.17-rfc742.patch
-Patch4:		bsd-finger-0.17-glibc-2.2.2.patch
+# fedora patches
+Patch1:		bsd-finger-0.16-pts.patch
+Patch2:		bsd-finger-0.17-exact.patch
+Patch3:		bsd-finger-0.16-allocbroken.patch
+Patch4:		bsd-finger-0.17-rfc742.patch
+Patch5:		bsd-finger-0.17-time.patch
+Patch6:		bsd-finger-0.17-usagi-ipv6.patch
+Patch7:		bsd-finger-0.17-typo.patch
+Patch8:		bsd-finger-0.17-strip.patch
+Patch9:		bsd-finger-0.17-utmp.patch
+Patch10:	bsd-finger-wide-char-support5.patch
+Patch11:	bsd-finger-0.17-init-realname.patch
+Patch12:	bsd-finger-0.17-host-info.patch
+Patch13:	bsd-finger-0.17-match_sigsegv.patch
+Patch14:	bsd-finger-0.17-man_page_systemd.patch
 BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
@@ -41,11 +51,7 @@ you'd like finger information to be available.
 %prep
 
 %setup -q -n bsd-finger-%{version}
-%patch0 -p1
-#%patch2 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%apply_patches
 
 %build
 sh configure
@@ -92,6 +98,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-17
+- sync patches with fedora
+
 * Tue May 03 2011 Oden Eriksson <oeriksson@mandriva.com> 0.17-14mdv2011.0
 + Revision: 664308
 - mass rebuild
