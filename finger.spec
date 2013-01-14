@@ -1,7 +1,7 @@
 Summary:	The finger client
 Name:		finger
 Version:	0.17
-Release:	18
+Release:	19
 License:	BSD
 Group:		Networking/Other
 URL:		ftp://sunsite.unc.edu/pub/Linux/system/network/finger
@@ -54,6 +54,8 @@ you'd like finger information to be available.
 %apply_patches
 
 %build
+%serverbuild_hardened
+
 %configure	--enable-ipv6
 %make
 
@@ -75,6 +77,9 @@ install -m644 %{SOURCE2} -D %{buildroot}%{_unitdir}/finger@.service
 %{_mandir}/man8/fingerd.8*
 
 %changelog
+* Mon Jan 14 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-19
+- enable %%serverbuild_hardened
+
 * Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-18
 - enable ipv6 support
 
