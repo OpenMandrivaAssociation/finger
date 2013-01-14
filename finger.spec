@@ -75,7 +75,7 @@ install -m644 %{SOURCE2} -D %{buildroot}%{_unitdir}/finger@.service
 %{_mandir}/man8/fingerd.8*
 
 %changelog
-* Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-13
+* Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-18
 - enable ipv6 support
 
 * Sat Jan 12 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 0.17-17
