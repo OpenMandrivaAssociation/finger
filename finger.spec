@@ -1,7 +1,7 @@
 Summary:	The finger client
 Name:		finger
 Version:	0.17
-Release:	26
+Release:	27
 License:	BSD
 Group:		Networking/Other
 Url:		http://www.ibiblio.org/pub/Linux/system/network/finger/
