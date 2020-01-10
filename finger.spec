@@ -51,7 +51,7 @@ you'd like finger information to be available.
 
 %prep
 %setup -qn bsd-finger-%{version}
-%apply_patches
+%autopatch -p1
 
 %build
 %serverbuild_hardened
