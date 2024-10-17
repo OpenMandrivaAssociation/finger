@@ -4,7 +4,7 @@ Version:	0.17
 Release:	28
 License:	BSD
 Group:		Networking/Other
-Url:		http://www.ibiblio.org/pub/Linux/system/network/finger/
+Url:		https://www.ibiblio.org/pub/Linux/system/network/finger/
 Source0:	http://www.ibiblio.org/pub/Linux/system/network/finger/bsd-finger-%{version}.tar.gz
 Source1:	finger.socket
 Source2:	finger@.service
